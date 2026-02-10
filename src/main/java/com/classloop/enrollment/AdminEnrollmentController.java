@@ -1,8 +1,9 @@
 package com.classloop.enrollment;
 
 import com.classloop.auth.JwtService;
+import com.classloop.util.ControllerUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class AdminEnrollmentController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllEnrollments(Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> getAllEnrollments(HttpServletRequest request) {
+        String token = ControllerUtils.extractToken(request);
         String role = jwtService.extractRole(token);
 
         if (!"ADMIN".equals(role)) {
@@ -34,8 +35,8 @@ public class AdminEnrollmentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createEnrollment(@RequestBody CreateEnrollmentRequest request, Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> createEnrollment(@RequestBody CreateEnrollmentRequest request, HttpServletRequest httpRequest) {
+        String token = ControllerUtils.extractToken(httpRequest);
         String role = jwtService.extractRole(token);
 
         if (!"ADMIN".equals(role)) {
@@ -49,8 +50,8 @@ public class AdminEnrollmentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEnrollment(@PathVariable UUID id, Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> deleteEnrollment(@PathVariable UUID id, HttpServletRequest request) {
+        String token = ControllerUtils.extractToken(request);
         String role = jwtService.extractRole(token);
 
         if (!"ADMIN".equals(role)) {
@@ -66,8 +67,8 @@ public class AdminEnrollmentController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getEnrollmentsByUser(@PathVariable UUID userId, Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> getEnrollmentsByUser(@PathVariable UUID userId, HttpServletRequest request) {
+        String token = ControllerUtils.extractToken(request);
         String role = jwtService.extractRole(token);
 
         if (!"ADMIN".equals(role)) {
@@ -79,8 +80,8 @@ public class AdminEnrollmentController {
     }
 
     @GetMapping("/class/{classId}")
-    public ResponseEntity<?> getEnrollmentsByClass(@PathVariable UUID classId, Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> getEnrollmentsByClass(@PathVariable UUID classId, HttpServletRequest request) {
+        String token = ControllerUtils.extractToken(request);
         String role = jwtService.extractRole(token);
 
         if (!"ADMIN".equals(role)) {
@@ -89,11 +90,6 @@ public class AdminEnrollmentController {
 
         List<Enrollment> enrollments = enrollmentRepository.findByClassId(classId);
         return ResponseEntity.ok(enrollments);
-    }
-
-    private String extractToken(Authentication authentication) {
-        return authentication.getCredentials() != null ? 
-               authentication.getCredentials().toString() : "";
     }
 
     static class CreateEnrollmentRequest {

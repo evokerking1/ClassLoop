@@ -3,8 +3,9 @@ package com.classloop.classroom;
 import com.classloop.auth.JwtService;
 import com.classloop.enrollment.Enrollment;
 import com.classloop.enrollment.EnrollmentRepository;
+import com.classloop.util.ControllerUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +29,8 @@ public class ClassroomController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Classroom>> getClasses(Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<List<Classroom>> getClasses(HttpServletRequest request) {
+        String token = ControllerUtils.extractToken(request);
         UUID userId = jwtService.extractUserId(token);
         String role = jwtService.extractRole(token);
 
@@ -48,8 +49,8 @@ public class ClassroomController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createClass(@RequestBody CreateClassRequest request, Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> createClass(@RequestBody CreateClassRequest request, HttpServletRequest httpRequest) {
+        String token = ControllerUtils.extractToken(httpRequest);
         UUID userId = jwtService.extractUserId(token);
         String role = jwtService.extractRole(token);
 
@@ -66,11 +67,6 @@ public class ClassroomController {
         classroom = classroomRepository.save(classroom);
 
         return ResponseEntity.ok(classroom);
-    }
-
-    private String extractToken(Authentication authentication) {
-        return authentication.getCredentials() != null ? 
-               authentication.getCredentials().toString() : "";
     }
 
     static class CreateClassRequest {

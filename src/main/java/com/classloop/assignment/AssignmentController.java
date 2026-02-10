@@ -5,8 +5,9 @@ import com.classloop.classroom.Classroom;
 import com.classloop.classroom.ClassroomRepository;
 import com.classloop.enrollment.Enrollment;
 import com.classloop.enrollment.EnrollmentRepository;
+import com.classloop.util.ControllerUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -34,8 +35,8 @@ public class AssignmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Assignment>> getAssignments(Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<List<Assignment>> getAssignments(HttpServletRequest request) {
+        String token = ControllerUtils.extractToken(request);
         UUID userId = jwtService.extractUserId(token);
         String role = jwtService.extractRole(token);
 
@@ -58,8 +59,8 @@ public class AssignmentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAssignment(@RequestBody CreateAssignmentRequest request, Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> createAssignment(@RequestBody CreateAssignmentRequest request, HttpServletRequest httpRequest) {
+        String token = ControllerUtils.extractToken(httpRequest);
         UUID userId = jwtService.extractUserId(token);
         String role = jwtService.extractRole(token);
 
@@ -84,11 +85,6 @@ public class AssignmentController {
         assignment = assignmentRepository.save(assignment);
 
         return ResponseEntity.ok(assignment);
-    }
-
-    private String extractToken(Authentication authentication) {
-        return authentication.getCredentials() != null ? 
-               authentication.getCredentials().toString() : "";
     }
 
     static class CreateAssignmentRequest {

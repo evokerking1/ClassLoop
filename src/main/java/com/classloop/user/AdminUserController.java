@@ -1,8 +1,9 @@
 package com.classloop.user;
 
 import com.classloop.auth.JwtService;
+import com.classloop.util.ControllerUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,8 @@ public class AdminUserController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllUsers(Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> getAllUsers(HttpServletRequest request) {
+        String token = ControllerUtils.extractToken(request);
         String role = jwtService.extractRole(token);
 
         if (!"ADMIN".equals(role)) {
@@ -37,8 +38,8 @@ public class AdminUserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request, Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request, HttpServletRequest httpRequest) {
+        String token = ControllerUtils.extractToken(httpRequest);
         String role = jwtService.extractRole(token);
 
         if (!"ADMIN".equals(role)) {
@@ -60,8 +61,8 @@ public class AdminUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody UpdateUserRequest request, Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody UpdateUserRequest request, HttpServletRequest httpRequest) {
+        String token = ControllerUtils.extractToken(httpRequest);
         String role = jwtService.extractRole(token);
 
         if (!"ADMIN".equals(role)) {
@@ -88,8 +89,8 @@ public class AdminUserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable UUID id, Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> deleteUser(@PathVariable UUID id, HttpServletRequest request) {
+        String token = ControllerUtils.extractToken(request);
         String role = jwtService.extractRole(token);
 
         if (!"ADMIN".equals(role)) {
@@ -102,11 +103,6 @@ public class AdminUserController {
 
         userRepository.deleteById(id);
         return ResponseEntity.ok().build();
-    }
-
-    private String extractToken(Authentication authentication) {
-        return authentication.getCredentials() != null ? 
-               authentication.getCredentials().toString() : "";
     }
 
     static class CreateUserRequest {

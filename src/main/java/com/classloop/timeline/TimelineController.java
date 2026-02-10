@@ -7,6 +7,8 @@ import com.classloop.classroom.Classroom;
 import com.classloop.classroom.ClassroomRepository;
 import com.classloop.enrollment.Enrollment;
 import com.classloop.enrollment.EnrollmentRepository;
+import com.classloop.util.ControllerUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,8 +39,8 @@ public class TimelineController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TimelineItem>> getTimeline(Authentication authentication) {
-        String token = extractToken(authentication);
+    public ResponseEntity<?> getTimeline(HttpServletRequest request) {
+        String token = ControllerUtils.extractToken(request);
         UUID userId = jwtService.extractUserId(token);
 
         // Get all enrolled classes
@@ -108,11 +110,6 @@ public class TimelineController {
         }
 
         return conflictLevels;
-    }
-
-    private String extractToken(Authentication authentication) {
-        return authentication.getCredentials() != null ? 
-               authentication.getCredentials().toString() : "";
     }
 
     record TimelineItem(
