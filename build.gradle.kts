@@ -1,7 +1,7 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.2.0"
-    id("io.spring.dependency-management") version "1.1.4"
+    id("org.springframework.boot") version "3.3.0"
+    id("io.spring.dependency-management") version "1.1.6"
 }
 
 group = "com.classloop"
@@ -34,7 +34,7 @@ tasks.withType<Test> {
 // Task to install frontend dependencies
 tasks.register<Exec>("npmInstall") {
     workingDir = file("frontend")
-    commandLine("npm", "install")
+    commandLine("npm", "install", "--legacy-peer-deps")
 }
 
 // Task to build frontend
@@ -51,8 +51,8 @@ tasks.register<Copy>("copyFrontend") {
     into("src/main/resources/static")
 }
 
-// Make bootJar depend on copyFrontend
-tasks.named("bootJar") {
+// Make processResources depend on copyFrontend
+tasks.named("processResources") {
     dependsOn("copyFrontend")
 }
 
