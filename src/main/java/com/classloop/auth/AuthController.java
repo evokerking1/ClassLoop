@@ -29,10 +29,13 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("error", "Email already exists"));
         }
 
+        // First user becomes admin, subsequent users are students
+        User.Role role = userRepository.count() == 0 ? User.Role.ADMIN : User.Role.STUDENT;
+
         User user = new User(
                 request.email,
                 passwordEncoder.encode(request.password),
-                User.Role.STUDENT
+                role
         );
         user = userRepository.save(user);
 
