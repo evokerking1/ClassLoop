@@ -24,15 +24,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public synchronized ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         if (userRepository.findByEmail(request.email).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Email already exists"));
         }
 
+        // First user becomes admin, subsequent users are students
+        User.Role role = userRepository.count() == 0 ? User.Role.ADMIN : User.Role.STUDENT;
+
         User user = new User(
                 request.email,
                 passwordEncoder.encode(request.password),
-                User.Role.STUDENT
+                role
         );
         user = userRepository.save(user);
 

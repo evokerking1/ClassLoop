@@ -180,6 +180,10 @@ class ApiClient {
       method: 'DELETE',
     });
   }
+
+  async getAllClasses(): Promise<Classroom[]> {
+    return this.request('/admin/classes');
+  }
 }
 
 export const api = new ApiClient();
