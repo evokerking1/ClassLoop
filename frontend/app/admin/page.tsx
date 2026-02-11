@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { api, User, Enrollment, Classroom } from '../../lib/api';
@@ -134,13 +134,17 @@ export default function AdminPage() {
     router.push('/login');
   };
 
+  // Performance optimization: Create lookup maps for users and classes
+  const userMap = useMemo(() => new Map(users.map(u => [u.id, u])), [users]);
+  const classMap = useMemo(() => new Map(classes.map(c => [c.id, c])), [classes]);
+
   const getUserEmail = (userId: string) => {
-    const user = users.find(u => u.id === userId);
+    const user = userMap.get(userId);
     return user ? user.email : userId;
   };
 
   const getClassName = (classId: string) => {
-    const classroom = classes.find(c => c.id === classId);
+    const classroom = classMap.get(classId);
     return classroom ? classroom.name : classId;
   };
 
