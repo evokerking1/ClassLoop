@@ -1,0 +1,38 @@
+# Java / Spring Boot
+target/
+*.class
+*.jar
+*.war
+*.ear
+.gradle/
+build/
+!gradle-wrapper.jar
+.springBeans
+*.log
+
+# Frontend / Node.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/dist/
+frontend/.env*.local
+*.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Static resources (generated)
+src/main/resources/static/
+
+# H2 Database
+*.db
+*.mv.db
+*.trace.db
