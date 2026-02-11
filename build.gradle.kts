@@ -48,7 +48,7 @@ tasks.register<Exec>("npmBuild") {
 tasks.register<Copy>("copyFrontend") {
     dependsOn("npmBuild")
     from("frontend/out")
-    into("src/main/resources/static")
+    into("src/main/resources/static/app")
 }
 
 // Make processResources depend on copyFrontend

@@ -63,6 +63,9 @@ java -jar build/libs/classloop-1.0.0.jar
 
 The application will start on `http://localhost:8080`
 
+- **Frontend UI**: `http://localhost:8080/app`
+- **API Endpoints**: `http://localhost:8080/api`
+
 ### Development Mode
 
 #### Backend Only
