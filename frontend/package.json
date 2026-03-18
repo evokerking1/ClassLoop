@@ -9,10 +9,10 @@
     "export": "next export"
   },
   "dependencies": {
-    "next": "15.2.9",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "framer-motion": "10.16.16"
+    "framer-motion": "^12.38.0",
+    "next": "^16.1.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@types/node": "20.10.5",
