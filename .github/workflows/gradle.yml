@@ -43,7 +43,7 @@ jobs:
       run: ./gradlew buildJar
 
     - name: Upload built file
-      uses: actions/upload-artifact@v3.2.2
+      uses: actions/upload-artifact@v4
       with:
         path: ./build/libs/classloop-*.jar
 
